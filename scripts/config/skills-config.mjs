@@ -12,6 +12,8 @@
 // - Sub-attribute % gain per skill rank-up uses the Tier Modifier table
 // - Ability tier-up sub-attribute gain uses Tier Modifier * ABILITY_ATTR_MOD
 // - Ability starting tiers by mana category
+// - Advanced skills unlock at Apprentice tier
+// - Full skill + lore list (Body/Mind/Soul + Lore base + Advanced Monster Lore)
 //
 // This file is config + pure helpers only (no Foundry hooks).
 
@@ -115,6 +117,9 @@ export const SkillsConfig = {
     // When true: if rank >= cap, awarded uses are forced to 0.
     // This implements: "cannot advance toward next rank until tier allows it".
     hardStopAtCap: true,
+
+    // Advanced skills unlock at this tier (LOCKED)
+    advancedUnlockTier: "apprentice",
   },
 
   /* -------------------------------------------- */
@@ -130,6 +135,155 @@ export const SkillsConfig = {
     base: "normal",
     hybrid: "apprentice",
     eldritch: "master",
+  },
+
+  /* -------------------------------------------- */
+  /* Skills + Lore Catalog (LOCKED LIST)          */
+  /* -------------------------------------------- */
+
+  // Each entry:
+  // - label: UI label
+  // - attribute: "body" | "mind" | "soul"
+  // - subAttribute: e.g. "might"
+  // - kind: "base" | "lore" | "lore-advanced"
+  // - advanced: true/false (requires Apprentice tier to learn/progress)
+  skills: {
+    /* =======================
+     * BODY → MIGHT (LOCKED)
+     * ======================= */
+    athletics: { label: "Athletics", attribute: "body", subAttribute: "might", kind: "base", advanced: false },
+    combat_medium_melee: { label: "Combat: Medium Melee", attribute: "body", subAttribute: "might", kind: "base", advanced: false },
+    combat_heavy_melee: { label: "Combat: Heavy Melee", attribute: "body", subAttribute: "might", kind: "base", advanced: false },
+    combat_grappling: { label: "Combat: Grappling", attribute: "body", subAttribute: "might", kind: "base", advanced: false },
+    force: { label: "Force", attribute: "body", subAttribute: "might", kind: "base", advanced: false },
+
+    /* =======================
+     * BODY → AGILITY (LOCKED)
+     * ======================= */
+    acrobatics: { label: "Acrobatics", attribute: "body", subAttribute: "agility", kind: "base", advanced: false },
+    stealth: { label: "Stealth", attribute: "body", subAttribute: "agility", kind: "base", advanced: false },
+    sleight: { label: "Sleight of Hand", attribute: "body", subAttribute: "agility", kind: "base", advanced: false },
+    combat_light_melee: { label: "Combat: Light Melee", attribute: "body", subAttribute: "agility", kind: "base", advanced: false },
+    combat_unarmed: { label: "Combat: Unarmed", attribute: "body", subAttribute: "agility", kind: "base", advanced: false },
+    combat_ranged: { label: "Combat: Ranged", attribute: "body", subAttribute: "agility", kind: "base", advanced: false },
+    combat_throwing: { label: "Combat: Throwing", attribute: "body", subAttribute: "agility", kind: "base", advanced: false },
+
+    /* =========================
+     * BODY → FORTITUDE (LOCKED)
+     * ========================= */
+    endurance: { label: "Endurance", attribute: "body", subAttribute: "fortitude", kind: "base", advanced: false },
+    resistance_toxins: { label: "Resistance: Toxins", attribute: "body", subAttribute: "fortitude", kind: "base", advanced: false },
+    resistance_sickness: { label: "Resistance: Sickness", attribute: "body", subAttribute: "fortitude", kind: "base", advanced: false },
+    resistance_environmental: { label: "Resistance: Environmental", attribute: "body", subAttribute: "fortitude", kind: "base", advanced: false },
+    survival: { label: "Survival", attribute: "body", subAttribute: "fortitude", kind: "base", advanced: false },
+    pain_tolerance: { label: "Pain Tolerance", attribute: "body", subAttribute: "fortitude", kind: "base", advanced: false },
+
+    /* ======================
+     * MIND → FOCUS (LOCKED)
+     * ====================== */
+    channeling: { label: "Channeling", attribute: "mind", subAttribute: "focus", kind: "base", advanced: false },
+    concentration: { label: "Concentration", attribute: "mind", subAttribute: "focus", kind: "base", advanced: false },
+    ritual_control: { label: "Ritual Control", attribute: "mind", subAttribute: "focus", kind: "base", advanced: false },
+    precision_casting: { label: "Precision Casting", attribute: "mind", subAttribute: "focus", kind: "base", advanced: false },
+
+    /* =======================
+     * MIND → INSIGHT (LOCKED)
+     * ======================= */
+    perception: { label: "Perception", attribute: "mind", subAttribute: "insight", kind: "base", advanced: false },
+    investigation: { label: "Investigation", attribute: "mind", subAttribute: "insight", kind: "base", advanced: false },
+    tactics: { label: "Tactics", attribute: "mind", subAttribute: "insight", kind: "base", advanced: false },
+    medicine: { label: "Medicine", attribute: "mind", subAttribute: "insight", kind: "base", advanced: false },
+    arcane_analysis: { label: "Arcane Analysis", attribute: "mind", subAttribute: "insight", kind: "base", advanced: false },
+    use_magic_device: { label: "Use Magic Device", attribute: "mind", subAttribute: "insight", kind: "base", advanced: false },
+
+    /* =========================
+     * MIND → WILLPOWER (LOCKED)
+     * ========================= */
+    discipline: { label: "Discipline", attribute: "mind", subAttribute: "willpower", kind: "base", advanced: false },
+    clarity: { label: "Clarity", attribute: "mind", subAttribute: "willpower", kind: "base", advanced: false },
+    integrity: { label: "Integrity", attribute: "mind", subAttribute: "willpower", kind: "base", advanced: false },
+
+    /* =======================
+     * SOUL → PRESENCE (LOCKED)
+     * ======================= */
+    command: { label: "Command", attribute: "soul", subAttribute: "presence", kind: "base", advanced: false },
+    persuasion: { label: "Persuasion", attribute: "soul", subAttribute: "presence", kind: "base", advanced: false },
+    performance: { label: "Performance", attribute: "soul", subAttribute: "presence", kind: "base", advanced: false },
+    intimidation: { label: "Intimidation", attribute: "soul", subAttribute: "presence", kind: "base", advanced: false },
+
+    /* ===========================
+     * SOUL → MANIPULATION (LOCKED)
+     * =========================== */
+    deception: { label: "Deception", attribute: "soul", subAttribute: "manipulation", kind: "base", advanced: false },
+    guile: { label: "Guile", attribute: "soul", subAttribute: "manipulation", kind: "base", advanced: false },
+    intrigue: { label: "Intrigue", attribute: "soul", subAttribute: "manipulation", kind: "base", advanced: false },
+    coercion: { label: "Coercion", attribute: "soul", subAttribute: "manipulation", kind: "base", advanced: false },
+    subterfuge: { label: "Subterfuge", attribute: "soul", subAttribute: "manipulation", kind: "base", advanced: false },
+
+    /* ======================
+     * SOUL → RESOLVE (LOCKED)
+     * ====================== */
+    conviction: { label: "Conviction", attribute: "soul", subAttribute: "resolve", kind: "base", advanced: false },
+    resistance_corruption: { label: "Resistance: Corruption", attribute: "soul", subAttribute: "resolve", kind: "base", advanced: false },
+    sanctity: { label: "Sanctity", attribute: "soul", subAttribute: "resolve", kind: "base", advanced: false },
+    meditation: { label: "Meditation", attribute: "soul", subAttribute: "resolve", kind: "base", advanced: false },
+    aura_control: { label: "Aura Control", attribute: "soul", subAttribute: "resolve", kind: "base", advanced: false },
+
+    /* ======================
+     * INSIGHT → LORE (LOCKED)
+     * ====================== */
+
+    // Base Lore Skills (rollable)
+    lore_monsters: { label: "Lore: Monsters", attribute: "mind", subAttribute: "insight", kind: "lore", advanced: false },
+    lore_magic: { label: "Lore: Magic", attribute: "mind", subAttribute: "insight", kind: "lore", advanced: false },
+    lore_religion: { label: "Lore: Religion", attribute: "mind", subAttribute: "insight", kind: "lore", advanced: false },
+    lore_history: { label: "Lore: History", attribute: "mind", subAttribute: "insight", kind: "lore", advanced: false },
+    lore_legends: { label: "Lore: Legends", attribute: "mind", subAttribute: "insight", kind: "lore", advanced: false },
+
+    // Advanced Monster Lore Skills (independent; unlock at Apprentice)
+    lore_dragons: { label: "Lore: Dragons", attribute: "mind", subAttribute: "insight", kind: "lore-advanced", advanced: true },
+    lore_horrors: { label: "Lore: Horrors", attribute: "mind", subAttribute: "insight", kind: "lore-advanced", advanced: true },
+    lore_undead: { label: "Lore: Undead", attribute: "mind", subAttribute: "insight", kind: "lore-advanced", advanced: true },
+    lore_titans: { label: "Lore: Titans", attribute: "mind", subAttribute: "insight", kind: "lore-advanced", advanced: true },
+    lore_fae: { label: "Lore: Fae", attribute: "mind", subAttribute: "insight", kind: "lore-advanced", advanced: true },
+    lore_infernal: { label: "Lore: Infernal", attribute: "mind", subAttribute: "insight", kind: "lore-advanced", advanced: true },
+    lore_celestial: { label: "Lore: Celestial", attribute: "mind", subAttribute: "insight", kind: "lore-advanced", advanced: true },
+    lore_legendary: { label: "Lore: Legendary", attribute: "mind", subAttribute: "insight", kind: "lore-advanced", advanced: true },
+  },
+
+  /* -------------------------------------------- */
+  /* Optional: UI groupings for sheet rendering    */
+  /* -------------------------------------------- */
+
+  groups: {
+    body: {
+      might: ["athletics", "combat_medium_melee", "combat_heavy_melee", "combat_grappling", "force"],
+      agility: ["acrobatics", "stealth", "sleight", "combat_light_melee", "combat_unarmed", "combat_ranged", "combat_throwing"],
+      fortitude: ["endurance", "resistance_toxins", "resistance_sickness", "resistance_environmental", "survival", "pain_tolerance"],
+    },
+    mind: {
+      focus: ["channeling", "concentration", "ritual_control", "precision_casting"],
+      insight: ["perception", "investigation", "tactics", "medicine", "arcane_analysis", "use_magic_device"],
+      willpower: ["discipline", "clarity", "integrity"],
+    },
+    soul: {
+      presence: ["command", "persuasion", "performance", "intimidation"],
+      manipulation: ["deception", "guile", "intrigue", "coercion", "subterfuge"],
+      resolve: ["conviction", "resistance_corruption", "sanctity", "meditation", "aura_control"],
+    },
+    lore: {
+      base: ["lore_monsters", "lore_magic", "lore_religion", "lore_history", "lore_legends"],
+      advanced_monster: [
+        "lore_dragons",
+        "lore_horrors",
+        "lore_undead",
+        "lore_titans",
+        "lore_fae",
+        "lore_infernal",
+        "lore_celestial",
+        "lore_legendary",
+      ],
+    },
   },
 };
 
@@ -193,6 +347,27 @@ export function isSkillCappedForTier(rank, tierKey) {
 }
 
 /**
+ * Compare tier order (useful for gating rules elsewhere).
+ */
+export function tierIndex(tierKey) {
+  return SkillsConfig.TIERS.indexOf(tierKey);
+}
+
+/**
+ * Whether a given skill key is marked as advanced.
+ */
+export function isAdvancedSkill(skillKey) {
+  return Boolean(SkillsConfig.skills?.[skillKey]?.advanced);
+}
+
+/**
+ * Whether the current tier can learn/progress advanced skills.
+ */
+export function canUseOrProgressAdvancedSkills(tierKey) {
+  return tierIndex(tierKey) >= tierIndex(SkillsConfig.TIER_GATING.advancedUnlockTier);
+}
+
+/**
  * Apply a single roll outcome to a skill's uses/rank, respecting tier caps.
  *
  * LOCKED behavior:
@@ -207,11 +382,17 @@ export function isSkillCappedForTier(rank, tierKey) {
  * @param {number} params.uses - current uses toward next rank (may be fractional)
  * @param {string} params.outcome - "success" | "crit" | "fail"
  * @param {string} params.tierKey - character tier key (e.g. "normal")
- * @returns {{rank:number, uses:number, rankUps:number, capped:boolean}}
+ * @param {string} [params.skillKey] - optional: used to enforce advanced-skill gating
+ * @returns {{rank:number, uses:number, rankUps:number, capped:boolean, advancedBlocked?:boolean}}
  */
-export function applySkillUse({ rank, uses, outcome, tierKey }) {
+export function applySkillUse({ rank, uses, outcome, tierKey, skillKey } = {}) {
   let r = Math.max(0, Number(rank) || 0);
   let u = Number(uses) || 0;
+
+  // Optional: enforce advanced-skill gating
+  if (skillKey && isAdvancedSkill(skillKey) && !canUseOrProgressAdvancedSkills(tierKey)) {
+    return { rank: r, uses: u, rankUps: 0, capped: isSkillCappedForTier(r, tierKey), advancedBlocked: true };
+  }
 
   const capped = isSkillCappedForTier(r, tierKey);
 
@@ -240,11 +421,3 @@ export function applySkillUse({ rank, uses, outcome, tierKey }) {
 
   return { rank: r, uses: u, rankUps, capped: isSkillCappedForTier(r, tierKey) };
 }
-
-/**
- * Compare tier order (useful for gating rules elsewhere).
- */
-export function tierIndex(tierKey) {
-  return SkillsConfig.TIERS.indexOf(tierKey);
-}
-
